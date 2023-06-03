@@ -61,7 +61,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = Student::where('id', $id)->findOrFail();
+
+        return view('show', compact('students'));
     }
 
     /**
@@ -72,7 +74,9 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $departments = Department::all();
+
+        return view('edit', compact('departments'));
     }
 
     /**
@@ -82,9 +86,19 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Student $student)
     {
-        //
+        $data = request()->validate([
+            'name' => 'required',
+            'class' => 'required',
+            'date_of_birth' => 'required',
+            'department_id' => 'required',
+            'image' => ''
+        ]);
+
+        $student->update($data);
+
+        return redirect('students');
     }
 
     /**
@@ -93,8 +107,10 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Student $student, $id)
     {
-        //
+        $student->destroy($id);
+
+        return redirect('students');
     }
 }
